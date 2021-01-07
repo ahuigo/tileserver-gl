@@ -461,7 +461,9 @@ function start(opts) {
     }
     wmts.id = id;
     wmts.name = (serving.styles[id] || serving.rendered[id]).name;
-    wmts.baseUrl = `${req.get('X-Forwarded-Protocol') ? req.get('X-Forwarded-Protocol') : req.protocol}://${req.get('host')}`;
+    console.log("server.js:464 yexuehui:",req.protocol, req.get('X-Forwarded-Protocol'))
+    const mo_protocol = `${req.get('host')}`.indexOf('.momenta.cn')>0? 'https': req.protocol;
+    wmts.baseUrl = `${req.get('X-Forwarded-Protocol') ? req.get('X-Forwarded-Protocol') : mo_protocol}://${req.get('host')}`;
     return wmts;
   });
 

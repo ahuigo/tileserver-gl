@@ -7,9 +7,18 @@ const clone = require('clone');
 const glyphCompose = require('@mapbox/glyph-pbf-composite');
 
 
-module.exports.getPublicUrl = (publicUrl, req) => publicUrl || `${req.protocol}://${req.headers.host}/`;
+module.exports.getPublicUrl = (publicUrl, req) => {
+    //return publicUrl || `${req.protocol}://${req.headers.host}/`;
+    return publicUrl || getProtocol(req);
+}
+
+const getProtocol = (req) => {
+    const scheme = `${req.headers.host}`.indexOf('.momenta.cn') >0 ? 'https': req.protocol;
+    return scheme
+}
 
 module.exports.getTileUrls = (req, domains, path, format, publicUrl, aliases) => {
+    console.log("utils.js:13 protocol=",req.protocol)
 
   if (domains) {
     if (domains.constructor === String && domains.length > 0) {
@@ -54,7 +63,7 @@ module.exports.getTileUrls = (req, domains, path, format, publicUrl, aliases) =>
   const uris = [];
   if (!publicUrl) {
     for (const domain of domains) {
-      uris.push(`${req.protocol}://${domain}/${path}/{z}/{x}/{y}.${format}${query}`);
+      uris.push(`${getProtocol(req)}://${domain}/${path}/{z}/{x}/{y}.${format}${query}`);
     }
   } else {
     uris.push(`${publicUrl}${path}/{z}/{x}/{y}.${format}${query}`)
